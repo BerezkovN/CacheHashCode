@@ -1,0 +1,22 @@
+<Project>
+    <Target Name="IncludeFodyFiles">
+        
+        <PropertyGroup>
+            <WeaverFile>$(WeaverDirPath)\net9.0\$(PackageId).dll</WeaverFile>
+            <XcfFile>$(WeaverDirPath)\net9.0\$(PackageId).xcf</XcfFile>
+        </PropertyGroup>
+
+        <Error Text="FodyPackaging: No weaver found at $(WeaverFile). $(ProjectName) should have a Project Dependency on $(PackageId), and $(PackageId) should target 'net9.0'."
+               Condition="!Exists($(WeaverFile))" />
+
+        <ItemGroup>
+            <TfmSpecificPackageFile Include="$(XcfFile)"
+                                    PackagePath="weaver\$(PackageId).xcf"
+                                    Condition="Exists($(XcfFile))" />
+            <TfmSpecificPackageFile Include="$(WeaverFile)"
+                                    PackagePath="weaver\$(PackageId).dll" />
+            <TfmSpecificPackageFile Include="$(WeaverPropsFile)"
+                                    PackagePath="build\$(PackageId).props" />
+        </ItemGroup>
+    </Target>
+</Project>
